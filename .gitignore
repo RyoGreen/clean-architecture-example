@@ -1,5 +1,5 @@
 data
 init
 config.json
-src/node_modules
-assets/
+assets/node_modules
+dist

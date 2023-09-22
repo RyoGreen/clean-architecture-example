@@ -11,7 +11,7 @@ import (
 
 func NewRouter() *echo.Echo {
 	e := echo.New()
-	e.Static("/assets", "assets")
+	e.Static("/assets", "dist")
 	renderer := &TemplateRender{
 		templateDir:    "views/",
 		layoutTemplate: "layout",

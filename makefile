@@ -1,2 +1,2 @@
 build:
-	cd src && npm run build
+	cd assets && npm run build
