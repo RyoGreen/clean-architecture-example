@@ -14,26 +14,5 @@ func NewDB(cfg *config.Config) (*sql.DB, error) {
 	if err := db.Ping(); err != nil {
 		return nil, err
 	}
-	userQuery := `CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);`
-	postQuery := `CREATE TABLE IF NOT EXISTS posts (
-    id SERIAL PRIMARY KEY,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
-    user_id INT REFERENCES users(id)
-);`
-
-	if _, err := db.Exec(userQuery); err != nil {
-		return nil, err
-	}
-	if _, err := db.Exec(postQuery); err != nil {
-		return nil, err
-	}
 	return db, nil
 }
