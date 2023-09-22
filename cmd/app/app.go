@@ -4,6 +4,7 @@ import (
 	"clean-architecture/config"
 	"clean-architecture/db"
 	"clean-architecture/logger"
+	"clean-architecture/router"
 
 	_ "github.com/lib/pq"
 )
@@ -20,4 +21,6 @@ func main() {
 		return
 	}
 	defer db.Close()
+	e := router.NewRouter()
+	e.Logger.Error(e.Start(":8080"))
 }
