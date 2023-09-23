@@ -1,0 +1,27 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "dev": "gulp",
+    "build": "gulp build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.2",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.56.1",
+    "style-loader": "^3.3.1"
+  },
+  "dependencies": {
+    "browser-sync": "^2.27.10",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-esbuild": "^0.10.6",
+    "jquery": "^3.6.1",
+    "swiper": "^8.4.5"
+  }
+}
