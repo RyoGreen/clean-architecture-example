@@ -11,7 +11,7 @@ type Config struct {
 
 type DBconfig struct {
 	User     string `json:"user"`
-	DBName   string `json:"name"`
+	DBName   string `json:"dbname"`
 	Password string `json:"password"`
 	Host     string `json:"host"`
 	Port     string `json:"port"`
