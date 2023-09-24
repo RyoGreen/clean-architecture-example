@@ -2,9 +2,12 @@ package main
 
 import (
 	"clean-architecture/config"
+	"clean-architecture/controller"
 	"clean-architecture/db"
 	"clean-architecture/logger"
+	"clean-architecture/repo"
 	"clean-architecture/router"
+	"clean-architecture/usecase"
 )
 
 func main() {
@@ -19,6 +22,9 @@ func main() {
 		return
 	}
 	defer db.Close()
-	e := router.NewRouter()
+	userRepo := repo.NewUserRepo(db)
+	userUseCase := usecase.NewUserUsecase(userRepo)
+	userController := controller.NewUserController(userUseCase)
+	e := router.NewRouter(userController)
 	e.Logger.Error(e.Start(":8080"))
 }
