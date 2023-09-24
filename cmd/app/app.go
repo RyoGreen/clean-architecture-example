@@ -5,8 +5,6 @@ import (
 	"clean-architecture/db"
 	"clean-architecture/logger"
 	"clean-architecture/router"
-
-	_ "github.com/lib/pq"
 )
 
 func main() {
