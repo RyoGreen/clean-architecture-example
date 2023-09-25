@@ -53,13 +53,13 @@ func customErrorHandler(err error, c echo.Context) {
 		code = http.StatusInternalServerError
 		message = err.Error()
 	}
-	t, err := template.ParseFiles("views/error.html")
+	t, err := template.ParseFiles("views/layout.html", "views/error.html")
 	if err != nil {
 		return
 	}
 	var data = map[string]string{
-		"code":    fmt.Sprintf("%v", code),
-		"message": message,
+		"Code":    fmt.Sprintf("%v", code),
+		"Message": message,
 	}
 	t.Execute(c.Response().Writer, data)
 
