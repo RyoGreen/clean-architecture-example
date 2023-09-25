@@ -14,13 +14,13 @@ import (
 func NewRouter(uc controller.IUserController) *echo.Echo {
 	e := echo.New()
 	e.Static("/assets", "dist")
-	renderer := &TemplateRender{
+	render := &TemplateRender{
 		templateDir:    "views/",
 		layoutTemplate: "layout",
 	}
-	e.Renderer = renderer
+	e.Renderer = render
 	e.HTTPErrorHandler = customErrorHandler
-	e.POST("/", uc.Logout)
+	e.POST("/logout", uc.Logout)
 	e.POST("/login", uc.Login)
 	e.POST("/signup", uc.Signup)
 	return e
@@ -53,14 +53,10 @@ func customErrorHandler(err error, c echo.Context) {
 		code = http.StatusInternalServerError
 		message = err.Error()
 	}
-	t, err := template.ParseFiles("views/layout.html", "views/error.html")
-	if err != nil {
-		return
-	}
+
 	var data = map[string]string{
 		"Code":    fmt.Sprintf("%v", code),
 		"Message": message,
 	}
-	t.Execute(c.Response().Writer, data)
-
+	c.Render(code, "error.html", data)
 }
