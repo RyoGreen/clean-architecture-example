@@ -3,23 +3,26 @@ package router
 import (
 	"clean-architecture/controller"
 	"clean-architecture/logger"
+	"fmt"
 	"io"
+	"net/http"
 	"text/template"
 
 	"github.com/labstack/echo/v4"
 )
 
-func NewRouter() *echo.Echo {
+func NewRouter(uc controller.IUserController) *echo.Echo {
 	e := echo.New()
 	e.Static("/assets", "dist")
-	renderer := &TemplateRender{
+	render := &TemplateRender{
 		templateDir:    "views/",
 		layoutTemplate: "layout",
 	}
-	e.Renderer = renderer
-	e.GET("/", controller.Index)
-	e.GET("/login", controller.Login)
-	e.GET("/signup", controller.Signup)
+	e.Renderer = render
+	e.HTTPErrorHandler = customErrorHandler
+	e.POST("/logout", uc.Logout)
+	e.POST("/login", uc.Login)
+	e.POST("/signup", uc.Signup)
 	return e
 }
 
@@ -35,4 +38,25 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, e ec
 		return err
 	}
 	return templates.ExecuteTemplate(w, t.layoutTemplate, data)
+}
+
+func customErrorHandler(err error, c echo.Context) {
+	var code int
+	var message string
+
+	switch err.(type) {
+	case *echo.HTTPError:
+		httpErr := err.(*echo.HTTPError)
+		code = httpErr.Code
+		message = httpErr.Message.(string)
+	default:
+		code = http.StatusInternalServerError
+		message = err.Error()
+	}
+
+	var data = map[string]string{
+		"Code":    fmt.Sprintf("%v", code),
+		"Message": message,
+	}
+	c.Render(code, "error.html", data)
 }
