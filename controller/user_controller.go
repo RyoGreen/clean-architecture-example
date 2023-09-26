@@ -28,11 +28,11 @@ func (u *userController) Signup(c echo.Context) error {
 	var user model.User
 	if err := c.Bind(&user); err != nil {
 		logger.L.Error(err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, "Bad Request")
 	}
 	if _, err := u.uu.Signup(user); err != nil {
 		logger.L.Error(err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, "Bad Request")
 	}
 	return c.Redirect(http.StatusFound, "/login")
 }
@@ -41,12 +41,12 @@ func (u *userController) Login(c echo.Context) error {
 	var user model.User
 	if err := c.Bind(&user); err != nil {
 		logger.L.Error(err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, "Bad Request")
 	}
 	tokenStr, err := u.uu.Login(user)
 	if err != nil {
 		logger.L.Error(err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, "Bad Request")
 	}
 	c.SetCookie(cookie.SetTokenCookie(tokenStr))
 	return c.Redirect(http.StatusFound, "/")
