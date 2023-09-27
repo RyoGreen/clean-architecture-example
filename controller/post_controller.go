@@ -5,6 +5,7 @@ import (
 	"clean-architecture/model"
 	"clean-architecture/usecase"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -32,14 +33,20 @@ func (pc postController) ListPosts(c echo.Context) error {
 }
 
 func (pc postController) Create(c echo.Context) error {
-	var post model.Post
-	if err := c.Bind(&post); err != nil {
+	if err := c.Request().ParseForm(); err != nil {
 		logger.L.Error(err.Error())
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+	now := time.Now()
+	var post = model.Post{
+		Content:   c.FormValue("content"),
+		CreatedAt: now,
+		UpdatedAt: now,
+		UserID:    1,
 	}
 	if err := pc.pu.Create(&post); err != nil {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
-	return c.Redirect(http.StatusOK, "/")
+	return c.Redirect(http.StatusFound, "/")
 }

@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	getPostsQuery   = "SELECT * FROM post;"
-	createPostQuery = "INSERT INTO post (content, created_at, updated_at, user_id) VALUES($1, $2, $3, $4);"
+	getPostsQuery   = "SELECT * FROM posts;"
+	createPostQuery = "INSERT INTO posts (content, created_at, updated_at, user_id) VALUES($1, $2, $3, $4);"
 )
 
 type IPostRepo interface {
@@ -30,11 +30,12 @@ func (p postRepo) ListPosts() ([]*model.Post, error) {
 	}
 	for rows.Next() {
 		var post model.Post
-		if err := rows.Scan(&post); err != nil {
+		if err := rows.Scan(&post.ID, &post.Content, &post.CreatedAt, &post.UpdatedAt, &post.UserID); err != nil {
 			return nil, err
 		}
 		posts = append(posts, &post)
 	}
+	defer rows.Close()
 	return posts, nil
 }
 

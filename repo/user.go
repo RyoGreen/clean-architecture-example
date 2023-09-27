@@ -3,11 +3,12 @@ package repo
 import (
 	"clean-architecture/model"
 	"database/sql"
+	"fmt"
 )
 
 const (
-	getUserQuery    = "SELECT * FROM user WHERE email = $1;"
-	createUserQuery = "INSERT INTO user (email, password, created_at, updated_at) VALUES ($1, $2, $3, $4);"
+	getUserQuery    = "SELECT * FROM users WHERE email = $1;"
+	createUserQuery = "INSERT INTO users (email, password, created_at, updated_at) VALUES ($1, $2, $3, $4);"
 )
 
 type IUserRepo interface {
@@ -33,5 +34,6 @@ func (u userRepo) GetUserByEmail(email string) (*model.User, error) {
 
 func (u userRepo) CreateUser(user *model.User) error {
 	_, err := u.db.Exec(createUserQuery, user.Email, user.Password, user.CreatedAt, user.UpdatedAt)
+	fmt.Println(err)
 	return err
 }

@@ -21,8 +21,11 @@ func NewRouter(uc controller.IUserController, pc controller.IPostController) *ec
 	e.Renderer = render
 	e.HTTPErrorHandler = customErrorHandler
 	e.GET("/", pc.ListPosts)
+	e.POST("/post", pc.Create)
 	e.POST("/logout", uc.Logout)
 	e.POST("/login", uc.Login)
+	e.GET("/login", uc.IndexLogin)
+	e.GET("/signup", uc.IndexSignup)
 	e.POST("/signup", uc.Signup)
 	return e
 }
