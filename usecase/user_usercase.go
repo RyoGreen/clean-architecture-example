@@ -13,7 +13,7 @@ import (
 var secret = os.Getenv("secret")
 
 type IUserUsecase interface {
-	Signup(user model.User) (*model.UserResponse, error)
+	Signup(user model.User) error
 	Login(user model.User) (string, error)
 }
 
@@ -25,23 +25,20 @@ func NewUserUsecase(ur repo.IUserRepo) IUserUsecase {
 	return &userUsecase{ur}
 }
 
-func (uu *userUsecase) Signup(user model.User) (*model.UserResponse, error) {
+func (uu *userUsecase) Signup(user model.User) error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	newUser := model.User{
 		Email:    user.Email,
 		Password: string(hash),
 	}
 	if err := uu.ur.CreateUser(&newUser); err != nil {
-		return nil, err
+		return err
 	}
-	resUser := model.UserResponse{
-		ID:    newUser.ID,
-		Email: newUser.Email,
-	}
-	return &resUser, nil
+
+	return nil
 }
 
 func (uu *userUsecase) Login(user model.User) (string, error) {

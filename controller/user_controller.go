@@ -30,7 +30,7 @@ func (u *userController) Signup(c echo.Context) error {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusBadRequest, "Bad Request")
 	}
-	if _, err := u.uu.Signup(user); err != nil {
+	if err := u.uu.Signup(user); err != nil {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, "Bad Request")
 	}

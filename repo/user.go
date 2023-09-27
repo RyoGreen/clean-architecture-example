@@ -5,6 +5,11 @@ import (
 	"database/sql"
 )
 
+const (
+	getUserQuery    = "SELECT * FROM user WHERE email = $1;"
+	createUserQuery = "INSERT INTO user (email, password, created_at, updated_at) VALUES ($1, $2, $3, $4);"
+)
+
 type IUserRepo interface {
 	GetUserByEmail(email string) (*model.User, error)
 	CreateUser(user *model.User) error
@@ -17,11 +22,6 @@ type userRepo struct {
 func NewUserRepo(db *sql.DB) IUserRepo {
 	return &userRepo{db}
 }
-
-const (
-	getUserQuery    = "SELECT * FROM user WHERE email = $1;"
-	createUserQuery = "INSERT INTO user (email, password, created_at, updated_at) VALUES ($1, $2, $3, $4);"
-)
 
 func (u userRepo) GetUserByEmail(email string) (*model.User, error) {
 	var user = model.User{}

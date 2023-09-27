@@ -25,6 +25,9 @@ func main() {
 	userRepo := repo.NewUserRepo(db)
 	userUseCase := usecase.NewUserUsecase(userRepo)
 	userController := controller.NewUserController(userUseCase)
-	e := router.NewRouter(userController)
+	postRepo := repo.NewPostRepo(db)
+	postUseCase := usecase.NewPostUsecase(postRepo)
+	postController := controller.NewPostController(postUseCase)
+	e := router.NewRouter(userController, postController)
 	e.Logger.Error(e.Start(":8080"))
 }
