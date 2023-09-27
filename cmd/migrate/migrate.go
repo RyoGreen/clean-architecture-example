@@ -26,6 +26,12 @@ func main() {
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );`
+	sessionQuery := `CREATE TABLE IF NOT EXISTS sessions (
+    s_id VARCHAR(255) NOT NULL,
+		user_id INT REFERENCES users(id)
+    expired TIMESTAMP,
+    updated_at TIMESTAMP
+);`
 	postQuery := `CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
@@ -35,6 +41,10 @@ func main() {
 );`
 
 	if _, err := db.Exec(userQuery); err != nil {
+		logger.L.Error(err.Error())
+		return
+	}
+	if _, err := db.Exec(sessionQuery); err != nil {
 		logger.L.Error(err.Error())
 		return
 	}

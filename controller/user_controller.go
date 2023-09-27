@@ -5,6 +5,9 @@ import (
 	"clean-architecture/logger"
 	"clean-architecture/model"
 	"clean-architecture/usecase"
+	"crypto/rand"
+	"encoding/base64"
+	"io"
 	"net/http"
 	"time"
 
@@ -30,7 +33,7 @@ func NewUserController(uu usecase.IUserUsecase) IUserController {
 func (u *userController) Signup(c echo.Context) error {
 	if err := c.Request().ParseForm(); err != nil {
 		logger.L.Error(err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	now := time.Now()
 	var user = model.User{
@@ -41,7 +44,7 @@ func (u *userController) Signup(c echo.Context) error {
 	}
 	if err := u.uu.Signup(user); err != nil {
 		logger.L.Error(err.Error())
-		return echo.NewHTTPError(http.StatusInternalServerError, "Bad Request")
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	return c.Redirect(http.StatusFound, "/login")
 }
@@ -50,19 +53,23 @@ func (u *userController) Login(c echo.Context) error {
 	var user model.User
 	if err := c.Bind(&user); err != nil {
 		logger.L.Error(err.Error())
-		return echo.NewHTTPError(http.StatusBadRequest, "Bad Request")
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	tokenStr, err := u.uu.Login(user)
+	if err := u.uu.Login(user); err != nil {
+		logger.L.Error(err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	val, err := issuesSIDVal()
 	if err != nil {
 		logger.L.Error(err.Error())
-		return echo.NewHTTPError(http.StatusInternalServerError, "Bad Request")
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	c.SetCookie(cookie.SetTokenCookie(tokenStr))
+	c.SetCookie(cookie.SetSID(val))
 	return c.Redirect(http.StatusFound, "/")
 }
 
 func (u *userController) Logout(c echo.Context) error {
-	c.SetCookie(cookie.DeleteTokenCookie())
+	c.SetCookie(cookie.DelSID())
 	return c.Redirect(http.StatusFound, "/")
 }
 
@@ -72,4 +79,12 @@ func (u *userController) IndexSignup(c echo.Context) error {
 
 func (u *userController) IndexLogin(c echo.Context) error {
 	return c.Render(http.StatusOK, "login.html", nil)
+}
+
+func issuesSIDVal() (string, error) {
+	b := make([]byte, 32)
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(b), nil
 }

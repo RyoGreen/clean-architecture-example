@@ -5,20 +5,20 @@ import (
 	"time"
 )
 
-const name = "token"
+const SID = "token"
 
-func SetTokenCookie(token string) *http.Cookie {
+func SetSID(val string) *http.Cookie {
 	cookie := new(http.Cookie)
-	cookie.Name = name
-	cookie.Value = token
+	cookie.Name = SID
+	cookie.Value = val
 	cookie.Expires = time.Now().Add(24 * time.Hour)
 	cookie.Path = "/"
 	return cookie
 }
 
-func DeleteTokenCookie() *http.Cookie {
+func DelSID() *http.Cookie {
 	cookie := new(http.Cookie)
-	cookie.Name = name
+	cookie.Name = SID
 	cookie.Path = "/"
 	cookie.MaxAge = -1
 	return cookie

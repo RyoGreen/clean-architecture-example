@@ -64,3 +64,7 @@ func customErrorHandler(err error, c echo.Context) {
 	}
 	c.Render(code, "error.html", data)
 }
+
+type contextType string
+
+const ContextKey contextType = "current_user"
