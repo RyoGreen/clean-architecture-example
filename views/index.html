@@ -1,0 +1,6 @@
+{{define "body"}}
+<form method="post" action="/post">
+  <input type="text" name="content" />
+  <input type="submit" value="submit" />
+</form>
+{{range $i, $v := .}} {{$v}} {{end}} {{end}}

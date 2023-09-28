@@ -4,6 +4,8 @@ import (
 	"clean-architecture/config"
 	"database/sql"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
 
 func NewDB(cfg *config.Config) (*sql.DB, error) {

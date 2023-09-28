@@ -7,6 +7,8 @@ import (
 
 type Config struct {
 	DBConfig DBconfig `json:"db"`
+	HashKey  string   `json:"hash_key"`
+	BlockKey string   `json:"block_key"`
 }
 
 type DBconfig struct {
