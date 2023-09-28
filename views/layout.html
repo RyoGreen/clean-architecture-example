@@ -9,9 +9,18 @@
   </head>
 
   <body>
-    <header>header</header>
+    <header>
+      {{if isLogin .User}}
+      <form method="post" action="/logout">
+        <input type="submit" value="logout" />
+      </form>
+      {{else}}
+      <a href="/">top</a>
+      <a href="/login">login</a>
+      <a href="/signup">signup</a>
+      {{end}}
+    </header>
     <div class="inner">{{template "body".}}</div>
-    <footer>footer</footer>
   </body>
   <script src="/assets/index.js"></script>
 </html>

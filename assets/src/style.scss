@@ -1,5 +1,56 @@
 @use "./reset.css";
 
-h1 {
-  color: red;
+header {
+  width: 80%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0px 30px;
+  font-size: 30px;
+  a {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+.inner {
+  h1 {
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  width: 800px;
+  margin: auto;
+  margin-top: 50px;
+  .content {
+    margin: auto;
+    width: 35%;
+    .each-item {
+      margin: 3% 0;
+    }
+  }
+  form {
+    text-align: center;
+    input[type="text"],
+    input[type="password"] {
+      width: 120px;
+      border-radius: 4px;
+      border: none;
+      box-shadow: 0 0 0 1px #ccc inset;
+      appearance: none;
+    }
+    input[type="submit"] {
+      padding: 8px;
+      border-radius: 4px;
+      background-color: azure;
+    }
+  }
+  .not-login-text {
+    text-align: center;
+    font-size: 22px;
+  }
+  .error-code,
+  .error-message {
+    text-align: center;
+    font-size: 22px;
+  }
 }
