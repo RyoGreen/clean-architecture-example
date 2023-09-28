@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"text/template"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -36,8 +37,13 @@ type TemplateRender struct {
 	layoutTemplate string
 }
 
+var helpers = template.FuncMap{
+	"formatDate": func(date time.Time) string {
+		return date.Format(time.DateTime)
+	}}
+
 func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, e echo.Context) error {
-	templates, err := template.ParseFiles(t.templateDir+name, t.templateDir+t.layoutTemplate+".html")
+	templates, err := template.New(t.templateDir+name).Funcs(helpers).ParseFiles(t.templateDir+name, t.templateDir+t.layoutTemplate+".html")
 	if err != nil {
 		logger.L.Error(err.Error())
 		return err

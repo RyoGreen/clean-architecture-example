@@ -9,9 +9,15 @@
   </head>
 
   <body>
-    <header>header</header>
+    <header>
+      <a href="/">top</a>
+      <a href="/login">login</a>
+      <a href="/signup">signup</a>
+      <form method="post" action="/logout">
+        <input type="submit" value="logout" />
+      </form>
+    </header>
     <div class="inner">{{template "body".}}</div>
-    <footer>footer</footer>
   </body>
   <script src="/assets/index.js"></script>
 </html>
