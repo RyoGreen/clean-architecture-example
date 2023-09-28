@@ -28,9 +28,9 @@ func main() {
 );`
 	sessionQuery := `CREATE TABLE IF NOT EXISTS sessions (
     s_id VARCHAR(255) NOT NULL,
-		user_id INT REFERENCES users(id)
+		user_id INT REFERENCES users(id),
     expired TIMESTAMP,
-    updated_at TIMESTAMP
+    created_at TIMESTAMP
 );`
 	postQuery := `CREATE TABLE IF NOT EXISTS posts (
     id SERIAL PRIMARY KEY,

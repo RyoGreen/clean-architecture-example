@@ -50,12 +50,12 @@ func (u *userController) Signup(c echo.Context) error {
 }
 
 func (u *userController) Login(c echo.Context) error {
-	var user model.User
-	if err := c.Bind(&user); err != nil {
+	if err := c.Request().ParseForm(); err != nil {
 		logger.L.Error(err.Error())
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	if err := u.uu.Login(user); err != nil {
+	userID, err := u.uu.Login(c.FormValue("email"), c.FormValue("password"))
+	if err != nil {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -64,7 +64,23 @@ func (u *userController) Login(c echo.Context) error {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	c.SetCookie(cookie.SetSID(val))
+	now := time.Now()
+	session := &model.Session{
+		SID:       val,
+		UserID:    userID,
+		Expired:   now.Add(time.Hour * 24),
+		CreatedAt: now,
+	}
+	if err := u.uu.CreateSession(session); err != nil {
+		logger.L.Error(err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	setCookie, err := u.uu.SetSID(val)
+	if err != nil {
+		logger.L.Error(err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	c.SetCookie(setCookie)
 	return c.Redirect(http.StatusFound, "/")
 }
 

@@ -3,6 +3,7 @@ package main
 import (
 	"clean-architecture/config"
 	"clean-architecture/controller"
+	"clean-architecture/cookie"
 	"clean-architecture/db"
 	"clean-architecture/logger"
 	"clean-architecture/repo"
@@ -22,12 +23,16 @@ func main() {
 		return
 	}
 	defer db.Close()
-	userRepo := repo.NewUserRepo(db)
+	cm := cookie.NewCookieManager(cfg)
+	userRepo := repo.NewUserRepo(db, cm)
 	userUseCase := usecase.NewUserUsecase(userRepo)
 	userController := controller.NewUserController(userUseCase)
 	postRepo := repo.NewPostRepo(db)
 	postUseCase := usecase.NewPostUsecase(postRepo)
 	postController := controller.NewPostController(postUseCase)
-	e := router.NewRouter(userController, postController)
+	sessionRepo := repo.NewSessionRepo(db, cm)
+	sessionUseCase := usecase.NewSessionUsecase(sessionRepo)
+	sessionController := controller.NewSessionController(sessionUseCase)
+	e := router.NewRouter(userController, postController, sessionController)
 	e.Logger.Error(e.Start(":8080"))
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewRouter(uc controller.IUserController, pc controller.IPostController) *echo.Echo {
+func NewRouter(uc controller.IUserController, pc controller.IPostController, sc controller.ISessionController) *echo.Echo {
 	e := echo.New()
 	e.Static("/assets", "dist")
 	render := &TemplateRender{
@@ -20,6 +20,7 @@ func NewRouter(uc controller.IUserController, pc controller.IPostController) *ec
 	}
 	e.Renderer = render
 	e.HTTPErrorHandler = customErrorHandler
+	e.Use(sc.Middleware)
 	e.GET("/", pc.ListPosts)
 	e.POST("/post", pc.Create)
 	e.POST("/logout", uc.Logout)
