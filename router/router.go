@@ -3,6 +3,7 @@ package router
 import (
 	"clean-architecture/controller"
 	"clean-architecture/logger"
+	"clean-architecture/model"
 	"fmt"
 	"io"
 	"net/http"
@@ -40,7 +41,11 @@ type TemplateRender struct {
 var helpers = template.FuncMap{
 	"formatDate": func(date time.Time) string {
 		return date.Format(time.DateTime)
-	}}
+	},
+	"isLogin": func(u *model.User) bool {
+		return u != nil
+	},
+}
 
 func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, e echo.Context) error {
 	templates, err := template.New(t.templateDir+name).Funcs(helpers).ParseFiles(t.templateDir+name, t.templateDir+t.layoutTemplate+".html")
@@ -48,7 +53,21 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, e ec
 		logger.L.Error(err.Error())
 		return err
 	}
-	return templates.ExecuteTemplate(w, t.layoutTemplate, data)
+	renderData := struct {
+		User *model.User
+		Data interface{}
+	}{
+		User: currentUser(e),
+		Data: data,
+	}
+	return templates.ExecuteTemplate(w, t.layoutTemplate, renderData)
+}
+
+func currentUser(e echo.Context) *model.User {
+	if u, ok := e.Request().Context().Value("current_user").(*model.User); ok {
+		return u
+	}
+	return nil
 }
 
 func customErrorHandler(err error, c echo.Context) {

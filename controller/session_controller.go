@@ -24,7 +24,7 @@ func NewSessionController(su usecase.ISessionUsecase) ISessionController {
 
 type contextType string
 
-const contextKey contextType = "current_user"
+const ContextKey contextType = "current_user"
 
 func (sc *sessionController) Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -49,7 +49,7 @@ func (sc *sessionController) Middleware(next echo.HandlerFunc) echo.HandlerFunc 
 			logger.L.Info(err.Error())
 			return nil
 		}
-		ctx := context.WithValue(c.Request().Context(), contextKey, user)
+		ctx := context.WithValue(c.Request().Context(), ContextKey, user)
 		c.SetRequest(c.Request().WithContext(ctx))
 		if err := next(c); err != nil {
 			c.Error(err)

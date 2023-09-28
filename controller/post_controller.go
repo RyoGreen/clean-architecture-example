@@ -38,7 +38,7 @@ func (pc postController) Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	now := time.Now()
-	user := c.Request().Context().Value(contextKey).(*model.User)
+	user := c.Request().Context().Value(ContextKey).(*model.User)
 	if user == nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "not login user")
 	}

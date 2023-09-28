@@ -10,12 +10,15 @@
 
   <body>
     <header>
-      <a href="/">top</a>
-      <a href="/login">login</a>
-      <a href="/signup">signup</a>
+      {{if isLogin .User}}
       <form method="post" action="/logout">
         <input type="submit" value="logout" />
       </form>
+      {{else}}
+      <a href="/">top</a>
+      <a href="/login">login</a>
+      <a href="/signup">signup</a>
+      {{end}}
     </header>
     <div class="inner">{{template "body".}}</div>
   </body>

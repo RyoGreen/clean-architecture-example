@@ -5,7 +5,7 @@
   <input type="submit" value="submit" />
 </form>
 <div class="content">
-  {{range $i, $v := .}}
+  {{range $i, $v := .Data}}
   <div class="each-item">
     <p>ID: {{$v.ID}}</p>
     <p>User ID: {{$v.UserID}}</p>
