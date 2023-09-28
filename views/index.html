@@ -1,9 +1,12 @@
-{{define "body"}}
+{{define "body"}} {{if isLogin .User}}
 <form method="post" action="/post">
   <label>text</label>
   <input type="text" name="content" />
   <input type="submit" value="submit" />
 </form>
+{{else}}
+<p class="not-login-text">Please login if you want to post</p>
+{{end}}
 <div class="content">
   {{range $i, $v := .Data}}
   <div class="each-item">
