@@ -64,7 +64,7 @@ func (t *TemplateRender) Render(w io.Writer, name string, data interface{}, e ec
 }
 
 func currentUser(e echo.Context) *model.User {
-	if u, ok := e.Request().Context().Value("current_user").(*model.User); ok {
+	if u, ok := e.Request().Context().Value(controller.ContextKey).(*model.User); ok {
 		return u
 	}
 	return nil
@@ -90,7 +90,3 @@ func customErrorHandler(err error, c echo.Context) {
 	}
 	c.Render(code, "error.html", data)
 }
-
-type contextType string
-
-const ContextKey contextType = "current_user"
