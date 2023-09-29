@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   postgres:
     image: postgres:14.5-bullseye
@@ -10,8 +10,26 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build:
       context: .
+      dockerfile: ./docker/app/Dockerfile
+    ports:
+      - 8080:8080
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
+  migrate:
+    build:
+      context: .
+      dockerfile: ./docker/migrate/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
