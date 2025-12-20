@@ -1,6 +1,0 @@
-data
-init
-assets/node_modules
-dist
-*.json
-tmp
