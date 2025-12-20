@@ -29,7 +29,7 @@ func (pc postController) ListPosts(c echo.Context) error {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.Render(http.StatusOK, "index.html", posts)
+	return c.JSON(http.StatusOK, posts)
 }
 
 func (pc postController) Create(c echo.Context) error {
@@ -52,5 +52,5 @@ func (pc postController) Create(c echo.Context) error {
 		logger.L.Error(err.Error())
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.Redirect(http.StatusFound, "/")
+	return c.NoContent(http.StatusOK)
 }
